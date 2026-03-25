@@ -7,3 +7,10 @@
 * SQLite offline cache
 * TranslationScope widget for automatic UI rebuilds
 * `AiSmartTranslate` facade for easy access
+
+
+## 1.0.1
+
+* Google Cloud Translate API added as fallback option
+* Minor improvement and code fixes
+* `trContent` / `trContentOf(context)` for runtime translation 
