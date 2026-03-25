@@ -1,0 +1,13 @@
+name: ai_smart_translate_example
+description: Example app for ai_smart_translate package.
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ai_smart_translate:
+    path: ../
