@@ -36,15 +36,13 @@
       ]
     },
     {
-      "name": "sqflite",
-      "version": "2.4.2",
+      "name": "http",
+      "version": "1.6.0",
       "dependencies": [
-        "flutter",
-        "path",
-        "sqflite_android",
-        "sqflite_common",
-        "sqflite_darwin",
-        "sqflite_platform_interface"
+        "async",
+        "http_parser",
+        "meta",
+        "web"
       ]
     },
     {
@@ -66,13 +64,15 @@
       "dependencies": []
     },
     {
-      "name": "http",
-      "version": "1.6.0",
+      "name": "sqflite",
+      "version": "2.4.2",
       "dependencies": [
-        "async",
-        "http_parser",
-        "meta",
-        "web"
+        "flutter",
+        "path",
+        "sqflite_android",
+        "sqflite_common",
+        "sqflite_darwin",
+        "sqflite_platform_interface"
       ]
     },
     {
@@ -108,44 +108,26 @@
       "dependencies": []
     },
     {
-      "name": "sqflite_common",
-      "version": "2.5.6",
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "http_parser",
+      "version": "4.1.2",
       "dependencies": [
-        "meta",
-        "path",
-        "synchronized"
+        "collection",
+        "source_span",
+        "string_scanner",
+        "typed_data"
       ]
     },
     {
-      "name": "sqflite_platform_interface",
-      "version": "2.4.0",
+      "name": "async",
+      "version": "2.13.0",
       "dependencies": [
-        "flutter",
-        "meta",
-        "platform",
-        "plugin_platform_interface",
-        "sqflite_common"
-      ]
-    },
-    {
-      "name": "sqflite_darwin",
-      "version": "2.4.2",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "path",
-        "sqflite_common",
-        "sqflite_platform_interface"
-      ]
-    },
-    {
-      "name": "sqflite_android",
-      "version": "2.4.2+3",
-      "dependencies": [
-        "flutter",
-        "path",
-        "sqflite_common",
-        "sqflite_platform_interface"
+        "collection",
+        "meta"
       ]
     },
     {
@@ -207,44 +189,68 @@
       ]
     },
     {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
+      "name": "sqflite_common",
+      "version": "2.5.6",
+      "dependencies": [
+        "meta",
+        "path",
+        "synchronized"
+      ]
     },
     {
-      "name": "http_parser",
-      "version": "4.1.2",
+      "name": "sqflite_platform_interface",
+      "version": "2.4.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "platform",
+        "plugin_platform_interface",
+        "sqflite_common"
+      ]
+    },
+    {
+      "name": "sqflite_darwin",
+      "version": "2.4.2",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "path",
+        "sqflite_common",
+        "sqflite_platform_interface"
+      ]
+    },
+    {
+      "name": "sqflite_android",
+      "version": "2.4.2+3",
+      "dependencies": [
+        "flutter",
+        "path",
+        "sqflite_common",
+        "sqflite_platform_interface"
+      ]
+    },
+    {
+      "name": "typed_data",
+      "version": "1.4.0",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
+      "name": "string_scanner",
+      "version": "1.4.1",
+      "dependencies": [
+        "source_span"
+      ]
+    },
+    {
+      "name": "source_span",
+      "version": "1.10.2",
       "dependencies": [
         "collection",
-        "source_span",
-        "string_scanner",
-        "typed_data"
+        "path",
+        "term_glyph"
       ]
-    },
-    {
-      "name": "async",
-      "version": "2.13.0",
-      "dependencies": [
-        "collection",
-        "meta"
-      ]
-    },
-    {
-      "name": "synchronized",
-      "version": "3.4.0",
-      "dependencies": []
-    },
-    {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "platform",
-      "version": "3.1.6",
-      "dependencies": []
     },
     {
       "name": "path_provider_windows",
@@ -281,6 +287,13 @@
       ]
     },
     {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
       "name": "path_provider_linux",
       "version": "2.2.1",
       "dependencies": [
@@ -292,27 +305,19 @@
       ]
     },
     {
-      "name": "typed_data",
-      "version": "1.4.0",
-      "dependencies": [
-        "collection"
-      ]
+      "name": "synchronized",
+      "version": "3.4.0",
+      "dependencies": []
     },
     {
-      "name": "string_scanner",
-      "version": "1.4.1",
-      "dependencies": [
-        "source_span"
-      ]
+      "name": "platform",
+      "version": "3.1.6",
+      "dependencies": []
     },
     {
-      "name": "source_span",
-      "version": "1.10.2",
-      "dependencies": [
-        "collection",
-        "path",
-        "term_glyph"
-      ]
+      "name": "term_glyph",
+      "version": "1.2.2",
+      "dependencies": []
     },
     {
       "name": "ffi",
@@ -326,11 +331,6 @@
         "meta",
         "path"
       ]
-    },
-    {
-      "name": "term_glyph",
-      "version": "1.2.2",
-      "dependencies": []
     }
   ],
   "configVersion": 1
