@@ -89,6 +89,34 @@ class TranslateService {
     }
   }
 
+  /// Like [getSync] but preserves [dont] substrings unchanged.
+  /// Replaces each with a unique placeholder, translates, then restores.
+  String getSyncWithDont(String text, List<String> dont) {
+    if (!_initialized || isSourceLang || text.trim().isEmpty) return text;
+
+    // Filter out blank entries to avoid replacing empty strings.
+    final parts = dont.where((s) => s.isNotEmpty).toList();
+    if (parts.isEmpty) return getSync(text);
+
+    // Build placeholder map: e.g. {{__TR0__}} → "John"
+    final placeholders = <String, String>{};
+    String modified = text;
+    for (var i = 0; i < parts.length; i++) {
+      final placeholder = '{{__TR${i}__}}';
+      placeholders[placeholder] = parts[i];
+      modified = modified.replaceAll(parts[i], placeholder);
+    }
+
+    final translated = getSync(modified);
+
+    // Restore original substrings
+    String result = translated;
+    for (final entry in placeholders.entries) {
+      result = result.replaceAll(entry.key, entry.value);
+    }
+    return result;
+  }
+
   // ─── .trContent (sync) ────────────────────────────────────────────────────
 
   /// Called by `.trContent` / `.trContentOf`. Memory-only — never saved to SQLite.
@@ -196,6 +224,30 @@ class TranslateService {
     if (plainBatch.isNotEmpty || htmlBatch.isNotEmpty) {
       _updateController.add(null); // triggers rebuild
     }
+  }
+
+  /// Like [getContentSync] but preserves [dont] substrings unchanged.
+  String getContentSyncWithDont(String text, List<String> dont) {
+    if (!_initialized || isSourceLang || text.trim().isEmpty) return text;
+
+    final parts = dont.where((s) => s.isNotEmpty).toList();
+    if (parts.isEmpty) return getContentSync(text);
+
+    final placeholders = <String, String>{};
+    String modified = text;
+    for (var i = 0; i < parts.length; i++) {
+      final placeholder = '{{__TR${i}__}}';
+      placeholders[placeholder] = parts[i];
+      modified = modified.replaceAll(parts[i], placeholder);
+    }
+
+    final translated = getContentSync(modified);
+
+    String result = translated;
+    for (final entry in placeholders.entries) {
+      result = result.replaceAll(entry.key, entry.value);
+    }
+    return result;
   }
 
   // ─── Async translate ──────────────────────────────────────────────────────
