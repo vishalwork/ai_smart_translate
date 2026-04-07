@@ -13,4 +13,16 @@
 
 * Google Cloud Translate API added as fallback option
 * Minor improvement and code fixes
-* `trContent` / `trContentOf(context)` for runtime translation 
+* `trContent` / `trContentOf(context)` for runtime translation
+
+
+
+## 1.0.2
+
+* Minor improvement and code fixes
+
+## 1.0.3
+
+* `dont` parameter added to `trOf`, `trContentOf` — preserves specified substrings (names, dates, etc.) from being translated
+* `trWith(dont: [...])` method added as context-free alternative to `.tr` getter with skip support
+* `trContentWith(dont: [...])` method added as context-free alternative to `.trContent` getter with skip support          
