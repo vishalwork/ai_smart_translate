@@ -469,8 +469,8 @@
         <span class="line2">Not Harder.</span>
       </h1>
       <p class="hero-desc">
-        A Flutter package that combines Google Translate with AI-powered improvements —
-        delivering natural, context-aware translations across 100+ languages.
+        A Flutter package with automatic AI provider fallback, offline SQLite cache,
+        and zero JSON maintenance — one line to translate any string.
       </p>
       <div class="hero-actions">
         <a href="https://pub.dev/packages/ai_smart_translate" target="_blank" class="btn btn-primary">
@@ -520,7 +520,7 @@
       </div>
       <div class="code-body" id="dep">
 <span class="kw">dependencies</span>:
-  <span class="fn">ai_smart_translate</span>: <span class="str">^0.0.3</span>
+  <span class="fn">ai_smart_translate</span>: <span class="str">^1.1.0</span>
       </div>
     </div>
 
@@ -535,16 +535,21 @@
         <button class="copy-btn" onclick="copyCode(this, 'usage')">copy</button>
       </div>
       <div class="code-body" id="usage">
-<span class="kw">import</span> <span class="str">'package:ai_smart_translate/ai_smart_translate.dart'</span>;
-
-<span class="cm">// Translate text naturally</span>
-<span class="kw">final</span> result = <span class="kw">await</span> <span class="fn">AiSmartTranslate</span>.translate(
-  text: <span class="str">"Invite your friends"</span>,
-  targetLang: <span class="str">"hi"</span>,
+<span class="cm">// 1. init once in main()</span>
+<span class="kw">await</span> <span class="fn">AiSmartTranslate</span>.init(
+  groqKey: <span class="str">'YOUR_GROQ_KEY'</span>,       <span class="cm">// free · 1st priority</span>
+  geminiKey: <span class="str">'YOUR_GEMINI_KEY'</span>,    <span class="cm">// free quota · 3rd priority</span>
 );
 
-<span class="cm">// Output: "अपने दोस्तों को इनवाइट करें" ✓</span>
-<span class="cm">// NOT:    "अपने मित्रों को आमंत्रित करें" ✗</span>
+<span class="cm">// 2. wrap app</span>
+<span class="fn">runApp</span>(<span class="fn">TranslationScope</span>(child: <span class="fn">MyApp</span>()));
+
+<span class="cm">// 3. use .tr on any string — that's it</span>
+<span class="fn">Text</span>(<span class="str">'Hello'</span>.tr)
+<span class="fn">Text</span>(<span class="str">'Welcome, {name}'</span>.tr)   <span class="cm">// placeholders preserved</span>
+
+<span class="cm">// 4. change language anytime</span>
+<span class="kw">await</span> <span class="fn">AiSmartTranslate</span>.changeLanguage(<span class="str">'hi'</span>);
       </div>
     </div>
   </section>
@@ -561,29 +566,29 @@
         <p class="feature-desc">Goes beyond word-for-word translation. Uses AI to produce translations that actually sound natural in context.</p>
       </div>
       <div class="feature-card">
-        <span class="feature-icon">⚡</span>
-        <div class="feature-title">Batch Translation</div>
-        <p class="feature-desc">Translate 100+ strings in a single API call. No more loops, no more rate limit headaches.</p>
-      </div>
-      <div class="feature-card">
         <span class="feature-icon">🔄</span>
-        <div class="feature-title">Auto Fallback</div>
-        <p class="feature-desc">If one provider fails, automatically falls back to the next. Your app never breaks mid-translation.</p>
+        <div class="feature-title">Auto Fallback Chain</div>
+        <p class="feature-desc">Groq → OpenRouter → Gemini → Google Translate. On rate limit, next provider kicks in automatically. Your app never breaks.</p>
       </div>
       <div class="feature-card">
-        <span class="feature-icon">🌍</span>
-        <div class="feature-title">100+ Languages</div>
-        <p class="feature-desc">Supports all major and minor languages. From Hindi to Swahili, your app speaks the world.</p>
+        <span class="feature-icon">⚙️</span>
+        <div class="feature-title">Custom Provider Order</div>
+        <p class="feature-desc">Define your own fallback chain with <code style="color:var(--accent);font-size:0.75rem">ProviderConfig</code>. Override models, set priority, plug in any OpenAI-compatible endpoint.</p>
       </div>
       <div class="feature-card">
-        <span class="feature-icon">💰</span>
-        <div class="feature-title">Free Tier Friendly</div>
-        <p class="feature-desc">Works with free API tiers. No surprise bills. Scale up only when you need to.</p>
+        <span class="feature-icon">🌐</span>
+        <div class="feature-title">All Platforms</div>
+        <p class="feature-desc">Android, iOS, Web, Linux, Windows, macOS — all supported. Auto-selects the right cache backend per platform.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💾</span>
+        <div class="feature-title">Offline Cache</div>
+        <p class="feature-desc">Translate once, use forever. SQLite on mobile/desktop, SharedPreferences on web. Zero repeated API calls.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🎯</span>
-        <div class="feature-title">App-Context Aware</div>
-        <p class="feature-desc">Knows "Invite" should be "इनवाइट करें" not "आमंत्रित करना" in a mobile app.</p>
+        <div class="feature-title">Zero JSON Maintenance</div>
+        <p class="feature-desc">No translation files to maintain. Add <code style="color:var(--accent);font-size:0.75rem">.tr</code> to any string and the package handles the rest.</p>
       </div>
     </div>
   </section>
@@ -591,7 +596,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-left">
-      Built by <span>KVishal</span> · MIT License · 2026
+      Built by <a href="https://vishalwork.github.io" target="_blank" style="color:var(--accent);text-decoration:none;">KVishal</a> · MIT License · 2026
     </div>
     <div class="footer-links">
       <a href="https://pub.dev/packages/ai_smart_translate" target="_blank">pub.dev</a>
