@@ -56,15 +56,6 @@ await AiSmartTranslate.init(
 );
 ```
 
-**Custom cache backend (optional):**
-
-```dart
-await AiSmartTranslate.init(
-  geminiKey: '...',
-  cacheBackend: MyHiveCacheBackend(), // implement TranslationCacheBackend
-);
-```
-
 **Custom OpenAI-compatible endpoint:**
 
 ```dart
