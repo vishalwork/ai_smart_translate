@@ -1,14 +1,22 @@
 import 'dart:convert';
 import 'ai_provider.dart';
 
-/// Mistral AI — Free tier available
-class MistralProvider extends AiProvider {
-  MistralProvider({required super.apiKey});
+/// Generic OpenAI-compatible AI provider.
+/// Configured via [ProviderConfig.custom].
+class CustomAiProvider extends AiProvider {
+  CustomAiProvider({
+    required super.apiKey,
+    required this.providerName,
+    required this.endpoint,
+    required this.model,
+  });
+
+  final String providerName;
+  final String endpoint;
+  final String model;
 
   @override
-  String get name => 'Mistral';
-
-  static const _url = 'https://api.mistral.ai/v1/chat/completions';
+  String get name => providerName;
 
   @override
   Future<Map<String, String>> translateChunk({
@@ -17,9 +25,9 @@ class MistralProvider extends AiProvider {
     String langCode = '',
   }) async {
     final res = await httpPost(
-      Uri.parse(_url),
+      Uri.parse(endpoint),
       {
-        'model': 'mistral-small-latest',
+        'model': model,
         'messages': [
           {'role': 'user', 'content': buildPrompt(texts, langName)}
         ],

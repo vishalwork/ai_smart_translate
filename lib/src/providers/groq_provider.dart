@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'ai_provider.dart';
 
-/// Groq (Llama 3.1) — Free: 30 RPM · 500K tokens/day
+/// Groq (Llama) — Free: 30 RPM · 500K tokens/day
 class GroqProvider extends AiProvider {
-  GroqProvider({required super.apiKey});
+  GroqProvider({required super.apiKey, String? model})
+      : model = model ?? 'llama-3.1-8b-instant';
+
+  final String model;
 
   @override
   String get name => 'Groq';
@@ -19,7 +22,7 @@ class GroqProvider extends AiProvider {
     final res = await httpPost(
       Uri.parse(_url),
       {
-        'model': 'llama-3.1-8b-instant',
+        'model': model,
         'messages': [
           {'role': 'user', 'content': buildPrompt(texts, langName)}
         ],

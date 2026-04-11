@@ -1,10 +1,10 @@
 name: ai_smart_translate
 description: >
   AI-powered Flutter translation package with automatic fallback across
-  multiple free AI providers (Gemini, Groq, OpenRouter, Mistral).
+  multiple free AI providers (Gemini, Groq, OpenRouter).
   Supports offline caching, .tr extension, and zero JSON maintenance.
-version: 1.0.3
-homepage: https://github.com/vishalwork/ai_smart_translate
+version: 1.1.0
+homepage: https://vishalwork.github.io/ai_smart_translate
 repository: https://github.com/vishalwork/ai_smart_translate
 issue_tracker: https://github.com/vishalwork/ai_smart_translate/issues
 
@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite: ^2.3.3
+  sqflite_common_ffi: ^2.3.4
   path: ^1.9.0
   shared_preferences: ^2.5.3
   http: ^1.2.2

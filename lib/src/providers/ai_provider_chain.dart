@@ -1,15 +1,16 @@
 import 'dart:developer';
+import '../config/provider_config.dart';
 import '../config/translate_config.dart';
 import 'ai_provider.dart';
+import 'custom_provider.dart';
 import 'gemini_provider.dart';
 import 'google_translate_provider.dart';
 import 'groq_provider.dart';
-import 'mistral_provider.dart';
 import 'open_router_provider.dart';
 
 /// Manages a prioritized list of AI providers with automatic fallback.
 ///
-/// Priority: Gemini → Groq → OpenRouter → Mistral → Google Translate
+/// Default order: Groq → OpenRouter → Gemini → Google Translate
 /// On 429: provider enters cooldown, next is tried automatically.
 class AiProviderChain {
   AiProviderChain._();
@@ -18,22 +19,37 @@ class AiProviderChain {
   List<AiProvider> _providers = [];
 
   void initialize({String appName = 'Flutter App'}) {
-    _providers = [
-      if (TranslateConfig.geminiKey.isNotEmpty)
-        GeminiProvider(apiKey: TranslateConfig.geminiKey),
-      if (TranslateConfig.groqKey.isNotEmpty)
-        GroqProvider(apiKey: TranslateConfig.groqKey),
-      if (TranslateConfig.openRouterKey.isNotEmpty)
-        OpenRouterProvider(
-            apiKey: TranslateConfig.openRouterKey, appName: appName),
-      if (TranslateConfig.mistralKey.isNotEmpty)
-        MistralProvider(apiKey: TranslateConfig.mistralKey),
-      // Google Translate as final fallback (deterministic, non-AI)
-      if (TranslateConfig.googleTranslateKey.isNotEmpty)
-        GoogleTranslateProvider(apiKey: TranslateConfig.googleTranslateKey),
-    ];
+    _providers = TranslateConfig.providers
+        .where((c) => c.apiKey.isNotEmpty)
+        .map((c) => _build(c, appName))
+        .toList();
+
     log('[AiSmartTranslate] Providers: ${_providers.map((p) => p.name).join(' → ')}',
         name: 'AiSmartTranslate');
+  }
+
+  AiProvider _build(ProviderConfig c, String appName) {
+    switch (c.type) {
+      case ProviderType.gemini:
+        return GeminiProvider(apiKey: c.apiKey);
+      case ProviderType.groq:
+        return GroqProvider(apiKey: c.apiKey, model: c.model);
+      case ProviderType.openRouter:
+        return OpenRouterProvider(
+          apiKey: c.apiKey,
+          model: c.model,
+          appName: c.appName ?? appName,
+        );
+      case ProviderType.googleTranslate:
+        return GoogleTranslateProvider(apiKey: c.apiKey);
+      case ProviderType.custom:
+        return CustomAiProvider(
+          apiKey: c.apiKey,
+          providerName: c.customName!,
+          endpoint: c.endpoint!,
+          model: c.model!,
+        );
+    }
   }
 
   Future<Map<String, String>> translate({
@@ -63,7 +79,6 @@ class AiProviderChain {
             name: 'AiSmartTranslate');
         continue;
       }
-
     }
 
     // All providers failed — return originals (graceful degradation)

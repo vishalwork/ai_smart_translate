@@ -39,6 +39,8 @@ class GeminiProvider extends AiProvider {
       // Parse retryDelay from response if available, else use default cooldown
       try {
         final body = jsonDecode(res.body) as Map<String, dynamic>;
+        final errorMsg = body['error']?['message'] as String?;
+        log('[$name] 429 body: $errorMsg', name: 'AiSmartTranslate');
         final details = body['error']?['details'] as List?;
         if (details != null) {
           for (final d in details) {
@@ -59,9 +61,7 @@ class GeminiProvider extends AiProvider {
       throw RateLimitException(name);
     }
     if (res.statusCode != 200) {
-      throw Exception('$name: ${res.statusCode} ${res.body}');
-    }
-    if (res.statusCode != 200) {
+      log('[$name] Error ${res.statusCode}: ${res.body}', name: 'AiSmartTranslate');
       throw Exception('$name: ${res.statusCode} ${res.body}');
     }
 

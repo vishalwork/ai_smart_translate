@@ -3,15 +3,19 @@ import 'ai_provider.dart';
 
 /// OpenRouter — Free models available (no credit card needed)
 class OpenRouterProvider extends AiProvider {
-  OpenRouterProvider({required super.apiKey, this.appName = 'Flutter App'});
+  OpenRouterProvider({
+    required super.apiKey,
+    this.appName = 'Flutter App',
+    String? model,
+  }) : model = model ?? 'openrouter/auto:free';
 
   final String appName;
+  final String model;
 
   @override
   String get name => 'OpenRouter';
 
   static const _url = 'https://openrouter.ai/api/v1/chat/completions';
-  static const _model = 'meta-llama/llama-3.2-3b-instruct:free';
 
   @override
   Future<Map<String, String>> translateChunk({
@@ -22,7 +26,7 @@ class OpenRouterProvider extends AiProvider {
     final res = await httpPost(
       Uri.parse(_url),
       {
-        'model': _model,
+        'model': model,
         'messages': [
           {'role': 'user', 'content': buildPrompt(texts, langName)}
         ],

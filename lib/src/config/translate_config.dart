@@ -1,31 +1,15 @@
+import 'provider_config.dart';
+
 /// Configuration for ai_smart_translate.
 /// Set API keys before calling [AiSmartTranslate.init].
 class TranslateConfig {
   TranslateConfig._();
 
-  // ─── API Keys ─────────────────────────────────────────────────────────────
-  // Set at least one. Providers with empty keys are skipped.
+  // ─── Provider chain ───────────────────────────────────────────────────────
 
-  /// Gemini 2.0 Flash — Free: 15 RPM · 1M tokens/day
-  /// Get key → https://aistudio.google.com
-  static String geminiKey = '';
-
-  /// Groq (Llama 3.1) — Free: 30 RPM · 500K tokens/day
-  /// Get key → https://console.groq.com
-  static String groqKey = '';
-
-  /// OpenRouter — Free models, no credit card
-  /// Get key → https://openrouter.ai
-  static String openRouterKey = '';
-
-  /// Mistral AI — Free tier
-  /// Get key → https://console.mistral.ai
-  static String mistralKey = '';
-
-  /// Google Translate — deterministic fallback (non-AI)
-  /// Uses translate-pa.googleapis.com/v1/translateHtml
-  /// Get key → https://console.cloud.google.com (enable "Cloud Translation API")
-  static String googleTranslateKey = '';
+  /// Ordered list of providers. First available = first tried.
+  /// Set via [AiSmartTranslate.init] — do not set directly.
+  static List<ProviderConfig> providers = [];
 
   // ─── Settings ─────────────────────────────────────────────────────────────
 

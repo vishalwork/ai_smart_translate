@@ -16,10 +16,15 @@
 /// ```
 library ai_smart_translate;
 
+export 'src/cache/translation_cache_backend.dart';
+export 'src/config/provider_config.dart';
 export 'src/config/translate_config.dart';
 export 'src/extensions/string_extension.dart';
 export 'src/widgets/translation_scope.dart';
 
+import 'src/cache/translation_cache.dart';
+import 'src/cache/translation_cache_backend.dart';
+import 'src/config/provider_config.dart';
 import 'src/config/translate_config.dart';
 import 'src/service/translate_service.dart';
 
@@ -34,30 +39,70 @@ class AiSmartTranslate {
   /// Provide at least one API key. Providers with empty keys are skipped.
   /// On rate-limit, the next provider is tried automatically.
   ///
-  /// Priority: Gemini → Groq → OpenRouter → Mistral → Google Translate
+  /// Default priority: Groq → OpenRouter → Gemini → Google Translate
   ///
+  /// **Simple usage** (named keys, default order):
   /// ```dart
   /// await AiSmartTranslate.init(
-  ///   geminiKey: Env.geminiKey,            // free: 1M tokens/day
-  ///   groqKey: Env.groqKey,               // optional AI fallback
-  ///   googleTranslateKey: Env.gtKey,      // deterministic final fallback
+  ///   geminiKey: Env.geminiKey,
+  ///   groqKey: Env.groqKey,
+  ///   googleTranslateKey: Env.gtKey,
+  /// );
+  /// ```
+  ///
+  /// **Custom order + custom model** (use `providers` list):
+  /// ```dart
+  /// await AiSmartTranslate.init(
+  ///   providers: [
+  ///     ProviderConfig.groq(apiKey: Env.groqKey, model: 'llama-3.3-70b-versatile'),
+  ///     ProviderConfig.openRouter(apiKey: Env.orKey, model: 'mistralai/mistral-7b-instruct:free'),
+  ///     ProviderConfig.gemini(apiKey: Env.geminiKey),
+  ///     ProviderConfig.googleTranslate(apiKey: Env.gtKey),
+  ///     ProviderConfig.custom(
+  ///       name: 'MyLLM',
+  ///       apiKey: '...',
+  ///       endpoint: 'https://api.myai.com/v1/chat/completions',
+  ///       model: 'my-model-v1',
+  ///     ),
+  ///   ],
+  /// );
+  /// ```
+  ///
+  /// **Custom cache backend** (optional — auto-selected by default):
+  /// ```dart
+  /// await AiSmartTranslate.init(
+  ///   geminiKey: '...',
+  ///   cacheBackend: MyCustomCacheBackend(),
   /// );
   /// ```
   static Future<void> init({
+    List<ProviderConfig>? providers,
     String geminiKey = '',
     String groqKey = '',
     String openRouterKey = '',
-    String mistralKey = '',
     String googleTranslateKey = '',
     String sourceLang = 'en',
     String appName = 'Flutter App',
+    TranslationCacheBackend? cacheBackend,
   }) async {
-    TranslateConfig.geminiKey = geminiKey;
-    TranslateConfig.groqKey = groqKey;
-    TranslateConfig.openRouterKey = openRouterKey;
-    TranslateConfig.mistralKey = mistralKey;
-    TranslateConfig.googleTranslateKey = googleTranslateKey;
     TranslateConfig.sourceLang = sourceLang;
+    if (cacheBackend != null) {
+      TranslationCache.instance.setBackend(cacheBackend);
+    }
+
+    if (providers != null) {
+      TranslateConfig.providers = providers;
+    } else {
+      // Default order: Groq → OpenRouter → Gemini → Google Translate
+      TranslateConfig.providers = [
+        if (groqKey.isNotEmpty) ProviderConfig.groq(apiKey: groqKey),
+        if (openRouterKey.isNotEmpty)
+          ProviderConfig.openRouter(apiKey: openRouterKey, appName: appName),
+        if (geminiKey.isNotEmpty) ProviderConfig.gemini(apiKey: geminiKey),
+        if (googleTranslateKey.isNotEmpty)
+          ProviderConfig.googleTranslate(apiKey: googleTranslateKey),
+      ];
+    }
 
     await TranslateService.instance.init(appName: appName);
   }
